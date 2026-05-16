@@ -1,4 +1,5 @@
 ---
+import Analytics from '@vercel/analytics/astro';
 import {
   events,
   meta,
@@ -454,8 +455,10 @@ const desc = meta.tagline;
         .wrap { padding: 0 14px; }
       }
     </style>
-    <!-- Vercel Web Analytics (pure-static site, no @astrojs/vercel adapter) -->
-    <script defer src="/_vercel/insights/script.js"></script>
+    <!-- Vercel Web Analytics — official @vercel/analytics/astro component
+         (pure-static site, no @astrojs/vercel adapter). Its presence in the
+         build is what makes Vercel wire the /_vercel/insights/* edge routes. -->
+    <Analytics />
   </head>
   <body>
     <header class="masthead">
