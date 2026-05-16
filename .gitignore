@@ -5,6 +5,10 @@
 prompts/
 problems/
 
+# browser-automation scratch (distribution ticks)
+.playwright-mcp/
+*.png
+
 # build & dependency artifacts
 node_modules/
 dist/
