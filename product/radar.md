@@ -74,3 +74,28 @@ and May-2026 xAI retirements. No named user yet — that is the #1 gap
   - Analytics: Vercel Web Analytics confirmed functional (/_vercel/insights/script.js 200) — read via observe_external in a later tick.
   - Show HN: BLOCKED — HN /showlim restricts Show HN from new/low-karma accounts (account `modelradar` created, 1 karma). Needs multi-day warming; re-queued.
   - 2nd resource comment: no genuine good-fit open thread exists yet (3x confirmed); not manufactured (non-spam constraint > checkbox). Re-scan queued.
+- 2026-05-16 (tick 32ec8098): EMAIL CAPTURE SHIPPED — the leaky bucket is
+  closed. The monetization+validation asset (the email list) can now be
+  captured. What is live in prod:
+  - Subscribe form in the hero (after stats strip) + a persistent footer
+    CTA, both `<form method=POST action=/api/subscribe>`, zero-JS
+    functional, progressively enhanced (fetch + inline status).
+  - Double-opt-in: `/api/subscribe` (Astro hybrid serverless) persists to
+    a Supabase Postgres `subscribers` table (RLS on, service-key only),
+    sends a branded confirm email via Resend from radar@foundagent.net;
+    `/api/confirm?token=` flips status pending→verified.
+  - Honest handling: invalid email → 400; duplicate-pending → re-send;
+    duplicate-verified → "already in", no resend; bad/expired token →
+    clear page; all idempotent.
+  - Store: per-workspace Supabase project provisioned
+    (qfeeqhvdxbnauqdsmtdt). Stack: @astrojs/vercel@7 serverless,
+    output:'hybrid' (index + rss stay static/SEO-safe), Node 20 pinned.
+  - E2E VERIFIED FROM PROD (not localhost): real foundagent.net catch-all
+    address → pending row → Resend `last_event=delivered` (authoritative
+    MX-acceptance; IMAP:993 egress is RST'd in this workspace so inbox
+    read is impossible — delivery event is the stronger proof) → confirm
+    link flipped DB to verified → idempotent re-click + bogus token +
+    invalid + duplicate all behave correctly. Test rows purged; list = 0
+    real subscribers, ready for distribution round 2 (#4, gated 05-19).
+  - Validation signal is now CAPTURABLE: signups = the readable intent
+    signal #5 (gated 05-21) reads, not just vanity pageviews.
